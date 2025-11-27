@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PCM — Register</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="scllogo.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .reg-wrap{max-width:820px;margin:36px auto;padding:18px}
+    .reg-card{padding:18px;border-radius:12px;background:var(--panel)}
+    form .row{display:flex;gap:12px;flex-wrap:wrap}
+    form label{display:block;margin-top:8px;font-weight:600;color:var(--accent)}
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .actions{display:flex;gap:12px;margin-top:12px}
+    .actions .primary{background:var(--primary);color:var(--accent);padding:10px 16px;border-radius:10px;border:0;cursor:pointer}
+    .actions .outline{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:var(--accent);cursor:pointer}
+    .summary{margin-top:12px;padding:10px;border-radius:8px;background:var(--glass)}
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html"><img src="scllogo.png" class="brand-logo"><div class="brand-text"><h1>PCM Official</h1><small>Register</small></div></a>
+      <nav class="top-nav"><a class="top-btn" href="index.html">Home</a><a class="top-btn" href="events.html">Events</a><a class="top-btn" href="register.html">Register</a><a class="top-btn" href="contact.html">Contact</a></nav>
+      <div class="header-controls"><button id="themeToggle" class="icon-btn">🌓</button><button id="menuToggle" class="menu-btn">☰</button></div>
+    </div>
+  </header>
+
+  
+  <div id="megaMenu" class="mega-menu" aria-hidden="true">...</div>
+
+  <main class="container reg-wrap">
+    <section class="reg-card">
+      <h2 style="margin:0 0 8px;color:var(--accent)">Event Registration</h2>
+      <p class="muted">Select event, ticket and complete mock payment. Registrations are saved in browser storage (demo).</p>
+
+      <form id="regForm" onsubmit="return false;">
+        <div class="row">
+          <div style="flex:1">
+            <label for="name">Full name</label>
+            <input id="name" required placeholder="Your full name">
+          </div>
+          <div style="flex:1">
+            <label for="email">Email</label>
+            <input id="email" type="email" required placeholder="you@example.com">
+          </div>
+        </div>
+
+        <label for="eventSel">Event</label>
+        <select id="eventSel" required></select>
+
+        <label for="ticketSel">Ticket type</label>
+        <select id="ticketSel"></select>
+
+        <div class="row">
+          <div style="flex:1">
+            <label for="qty">Quantity</label>
+            <input id="qty" type="number" value="1" min="1">
+          </div>
+          <div style="flex:1">
+            <label for="phone">Phone (optional)</label>
+            <input id="phone" placeholder="+94...">
+          </div>
+        </div>
+
+        <div class="summary">
+          Price each: <strong id="priceEach">0</strong> LKR &nbsp; • &nbsp; Total: <strong id="priceTotal">0</strong> LKR
+        </div>
+
+        <div class="actions">
+          <button id="payBtn" class="primary">Pay Now (Mock)</button>
+          <button id="resetBtn" class="outline" type="button">Reset</button>
+        </div>
+
+        <div id="resultArea" style="margin-top:12px"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer container" style="margin-top:22px"><div class="footer-grid"><div>© <span id="yearFooter">2025</span> PCM Official</div><div class="footer-credit">Pahan Bimsara</div></div></footer>
+
+<script>
+
+(function(){
+  const THEME_KEY='pcm_theme_v3';
+  function applyTheme(t){ if(t==='light') document.body.classList.add('light'); else document.body.classList.remove('light'); localStorage.setItem(THEME_KEY,t); }
+  applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light':'dark'));
+  document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(document.body.classList.contains('light') ? 'dark' : 'light'));
+  
+})();
+
+
+(function(){
+  const EVENTS = [
+    {id:'e1', title:'Annual Sports Meet', tickets:[{id:'std',label:'Standard',price:500},{id:'vip',label:'VIP',price:1200}]},
+    {id:'e2', title:'ICT Day', tickets:[{id:'std',label:'Standard',price:300}]},
+    {id:'e3', title:'Science Exhibition', tickets:[{id:'std',label:'Entry',price:200}]},
+    {id:'e4', title:'Art & Culture Night', tickets:[{id:'std',label:'Standard',price:400}]}
+  ];
+
+  const eventSel = document.getElementById('eventSel'), ticketSel = document.getElementById('ticketSel'), qty = document.getElementById('qty'), priceEach = document.getElementById('priceEach'), priceTotal = document.getElementById('priceTotal'), resultArea = document.getElementById('resultArea');
+
+  function init(){
+    eventSel.innerHTML = '<option value="">-- choose event --</option>' + EVENTS.map(e=>`<option value="${e.id}">${e.title}</option>`).join('');
+    const pre = sessionStorage.getItem('prefill');
+    if(pre) { eventSel.value = pre; sessionStorage.removeItem('prefill'); }
+    populateTickets();
+    recalc();
+  }
+  function populateTickets(){
+    const ev = EVENTS.find(e => e.id === eventSel.value);
+    if(!ev){ ticketSel.innerHTML = ''; recalc(); return; }
+    ticketSel.innerHTML = ev.tickets.map(t => `<option value="${t.id}" data-price="${t.price}">${t.label} — ${t.price} LKR</option>`).join('');
+    recalc();
+  }
+  function recalc(){
+    const opt = ticketSel.options[ticketSel.selectedIndex];
+    const p = opt ? Number(opt.dataset.price) : 0;
+    const q = Number(qty.value) || 1;
+    priceEach.textContent = p;
+    priceTotal.textContent = p * q;
+  }
+
+  eventSel.addEventListener('change', populateTickets);
+  ticketSel.addEventListener('change', recalc);
+  qty.addEventListener('input', recalc);
+
+  document.getElementById('payBtn').addEventListener('click', async ()=>{
+    const name = document.getElementById('name').value.trim(), email = document.getElementById('email').value.trim();
+    if(!name || !email || !eventSel.value) { alert('Please fill name, email and select an event'); return; }
+    const ticketOpt = ticketSel.options[ticketSel.selectedIndex]; if(!ticketOpt) { alert('Please pick ticket'); return; }
+    const q = Number(qty.value) || 1; const total = Number(ticketOpt.dataset.price) * q;
+    resultArea.innerHTML = '<div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.03)">Processing (mock)...</div>';
+    await new Promise(r => setTimeout(r,900));
+    const regs = JSON.parse(localStorage.getItem('pcm_regs') || '[]');
+    const id = 'R' + Date.now();
+    regs.push({id, name, email, event:eventSel.value, ticket:ticketOpt.value, qty:q, total, ts:new Date().toISOString()});
+    localStorage.setItem('pcm_regs', JSON.stringify(regs));
+    resultArea.innerHTML = `<div style="padding:12px;border-radius:8px;background:linear-gradient(90deg,var(--primary),#a60001);color:var(--accent)">✅ Registered — Ref: <strong>${id}</strong><br/>Total: ${total} LKR</div>`;
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=> { document.getElementById('regForm').reset(); init(); resultArea.innerHTML=''; });
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

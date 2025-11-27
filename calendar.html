@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PCM — Calendar</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="scllogo.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .cal-wrap{max-width:980px;margin:36px auto;padding:18px}
+    .cal-card{padding:18px;border-radius:12px;background:var(--panel)}
+    .weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px;color:var(--muted)}
+    .days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:8px}
+    .day{padding:10px;border-radius:8px;background:var(--glass);text-align:center;cursor:pointer}
+    .day.event{box-shadow:0 0 14px rgba(143,0,2,0.16);border:2px solid rgba(245,206,6,0.12)}
+    .info{margin-top:12px;padding:10px;border-radius:8px;background:var(--glass)}
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html"><img src="scllogo.png" class="brand-logo"><div class="brand-text"><h1>PCM Official</h1><small>Calendar</small></div></a>
+      <nav class="top-nav"><a class="top-btn" href="index.html">Home</a><a class="top-btn" href="events.html">Events</a><a class="top-btn" href="calendar.html">Calendar</a><a class="top-btn" href="announcements.html">Announcements</a></nav>
+      <div class="header-controls"><button id="themeToggle" class="icon-btn">🌓</button><button id="menuToggle" class="menu-btn">☰</button></div>
+    </div>
+  </header>
+
+  <main class="container cal-wrap">
+    <section class="cal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="margin:0;color:var(--accent)">Event Calendar</h2>
+        <div class="muted" id="monthLabel"></div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+        <div><button id="prevBtn" class="button outline">◀ Prev</button></div>
+        <div id="labelStrong" style="font-weight:800"></div>
+        <div><button id="nextBtn" class="button outline">Next ▶</button></div>
+      </div>
+
+      <div class="weekdays">
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+      </div>
+
+      <div id="days" class="days"></div>
+      <div id="info" class="info">Click a date to view event details</div>
+    </section>
+  </main>
+
+  <footer class="site-footer container" style="margin-top:22px"><div class="footer-grid"><div>© <span id="yearFooter">2025</span> PCM Official</div><div class="footer-credit">Pahan Bimsara</div></div></footer>
+
+<script>
+(function(){
+ 
+  const THEME_KEY='pcm_theme_v3';
+  function applyTheme(t){ if(t==='light') document.body.classList.add('light'); else document.body.classList.remove('light'); localStorage.setItem(THEME_KEY,t); }
+  applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+  document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(document.body.classList.contains('light') ? 'dark' : 'light'));
+
+ 
+  const EVENTS = {
+    '2026-01-29':'Interhouse Sports Meet — Main Grounds',
+    '2026-02-15':'Inter-school Debate Finals — Auditorium',
+    '2026-03-05':'Art & Culture Night — Hall B',
+    '2026-03-12':'Science Exhibition — Gymnasium',
+    '2026-04-18':'Annual Prize Giving — Main Grounds'
+  };
+
+  let view = new Date();
+  view.setDate(1);
+
+  function renderCalendar(){
+    const daysEl = document.getElementById('days');
+    daysEl.innerHTML = '';
+    const year = view.getFullYear(), month = view.getMonth();
+    document.getElementById('labelStrong').textContent = view.toLocaleString('default',{month:'long',year:'numeric'});
+    document.getElementById('monthLabel').textContent = view.toLocaleString('default',{month:'long',year:'numeric'});
+    const first = new Date(year, month, 1);
+    const start = (first.getDay() + 6) % 7; 
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+
+    
+    for(let i=0;i<start;i++){ const b = document.createElement('div'); b.className='day'; daysEl.appendChild(b); }
+
+    for(let d=1; d<=daysInMonth; d++){
+      const cur = new Date(year, month, d);
+      const iso = cur.toISOString().slice(0,10);
+      const el = document.createElement('div'); el.className='day'; el.textContent = d;
+      if(EVENTS[iso]){ el.classList.add('event'); }
+      el.addEventListener('click', ()=> {
+        if(EVENTS[iso]) document.getElementById('info').innerHTML = `<strong>${cur.toLocaleDateString()}</strong>: ${EVENTS[iso]} <br><a href="events.html">View event details</a>`;
+        else document.getElementById('info').textContent = `${cur.toLocaleDateString()}: No event scheduled.`;
+      });
+      daysEl.appendChild(el);
+    }
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', ()=> { view.setMonth(view.getMonth() - 1); renderCalendar(); });
+  document.getElementById('nextBtn').addEventListener('click', ()=> { view.setMonth(view.getMonth() + 1); renderCalendar(); });
+
+  document.addEventListener('DOMContentLoaded', renderCalendar);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PCM Assist — Chatbot | PCM Official</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="scllogo.png">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+
+    :root{--accent:#F5CE06;--primary:#8F0002}
+    body{font-family:Poppins,Inter,system-ui;min-height:100vh}
+    .page{max-width:980px;margin:110px auto;padding:20px}
+    .card{background:rgba(0,0,0,0.36);padding:18px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+    .chat-top{display:flex;align-items:center;gap:12px}
+    .chat-top h2{color:var(--accent);margin:0}
+    .chat-area{margin-top:14px;background:rgba(255,255,255,0.02);height:480px;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:12px}
+    .messages{flex:1;overflow:auto;padding-right:6px}
+    .bubble{display:inline-block;padding:10px 14px;border-radius:14px;margin:8px 0;max-width:76%;word-wrap:break-word}
+    .bubble.bot{background:linear-gradient(90deg,var(--primary),#6a0000);color:var(--accent);align-self:flex-start}
+    .bubble.user{background:var(--accent);color:var(--primary);align-self:flex-end;font-weight:700}
+    .timestamp{font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px}
+    .suggests{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+    .suggests button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .chat-input{display:flex;gap:10px;margin-top:8px}
+    .chat-input input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .chat-input button{background:linear-gradient(90deg,var(--primary),#a60001);color:#fff;border:none;padding:12px 16px;border-radius:10px;cursor:pointer}
+    .meta-small{color:rgba(255,255,255,0.6);font-size:13px;margin-top:6px}
+    @media (max-width:720px){ .page{margin:72px 12px} .chat-area{height:380px} }
+  </style>
+</head>
+<body data-page="chatbot">
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html"><img src="scllogo.png" class="brand-logo" alt="PCM logo"><div class="brand-text"><h1>PCM Official</h1><small>President's College Minuwangoda</small></div></a>
+      <nav class="top-nav"><a class="top-btn" href="index.html">Home</a><a class="top-btn" href="events.html">Events</a><a class="top-btn" href="register.html">Register</a><a class="top-btn" href="live.html">Live</a></nav>
+      <div class="header-controls"><button id="themeToggle" class="icon-btn">🌓</button><button id="menuToggle" class="menu-btn" aria-controls="megaMenu" aria-expanded="false">☰</button></div>
+    </div>
+  </header>
+
+ 
+  <div id="megaMenu" class="mega-menu" aria-hidden="true">
+    <div id="menuBackdrop" class="menu-backdrop" data-action="close" tabindex="-1"></div>
+    <div id="menuPanel" class="menu-panel" style="--cx:50%;--cy:50%;">
+      <button id="menuClose" class="menu-close" aria-label="Close">✕</button>
+      <div class="menu-inner container-grid">
+        <div class="menu-left">
+          <div class="menu-brand"><img src="scllogo.png" class="menu-logo" alt=""><div><h2>PCM Official</h2><p class="muted">Events & announcements</p></div></div>
+          <nav class="menu-links"><a href="index.html" class="menu-item" style="--i:0">Home</a><a href="events.html" class="menu-item" style="--i:1">Events</a><a href="announcements.html" class="menu-item" style="--i:2">Announcements</a><a href="calendar.html" class="menu-item" style="--i:3">Calendar</a><a href="register.html" class="menu-item" style="--i:4">Register</a><a href="live.html" class="menu-item" style="--i:5">Live</a></nav>
+        </div>
+        <aside class="menu-right" aria-hidden="true">
+          <div class="menu-visual" style="background-image:url('mbc.png')"><div class="menu-visual-inner"><h3>President's College Minuwangoda</h3><p class="muted">Stay updated on events & live highlights</p></div></div>
+        </aside>
+      </div>
+      <div class="menu-bottom container"><div class="menu-foot">© <span id="menuYear">2025</span> PCM Official — Designed by Pahan Bimsara</div></div>
+    </div>
+  </div>
+
+  <main class="page">
+    <div class="card">
+      <div class="chat-top">
+        <img src="scllogo.png" alt="logo" style="width:64px;height:64px;border-radius:10px">
+        <h2>PCM Virtual Assistant</h2>
+        <div style="margin-left:auto" class="meta-small">Try: registration, events, live scores, announcements</div>
+      </div>
+
+      <div class="chat-area">
+        <div id="messages" class="messages"></div>
+
+        <div class="suggests" id="suggests">
+          <button onclick="quickAsk('When is the next event?')">When is the next event?</button>
+          <button onclick="quickAsk('How do I register for events?')">How to register?</button>
+          <button onclick="quickAsk('What is PCM Official?')">What is PCM Official?</button>
+        </div>
+
+        <div class="chat-input">
+          <input id="inputText" placeholder="Type your question — e.g. 'When is the next sports meet?'" autocomplete="off" />
+          <button id="sendBtn">Send</button>
+        </div>
+      </div>
+
+      <div class="meta-small" style="margin-top:10px">This chatbot is client-side & offline — 20 programmed answers for school event help.</div>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><div>© <span id="yearFooter">2025</span> PCM Official</div><div class="footer-credit">Designed by Pahan Bimsara</div></div></footer>
+
+<script>
+
+const THEME_KEY = 'pcm_theme_v2';
+function applyTheme(t){ if(t==='light'){ document.body.classList.add('light'); document.body.classList.remove('dark'); } else { document.body.classList.remove('light'); document.body.classList.add('dark'); } localStorage.setItem(THEME_KEY,t); document.getElementById('themeToggle').setAttribute('aria-pressed', t==='light'); }
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(document.body.classList.contains('light') ? 'dark' : 'light'));
+applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+
+
+const mega = document.getElementById('megaMenu'), panel = document.getElementById('menuPanel');
+function openMenuFromBtn(btn){ const r=btn.getBoundingClientRect(); const cx=((r.left+r.width/2)/window.innerWidth)*100; const cy=((r.top+r.height/2)/window.innerHeight)*100; panel.style.setProperty('--cx', cx+'%'); panel.style.setProperty('--cy', cy+'%'); mega.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; setTimeout(()=>{ const a = document.querySelector('.menu-item'); if(a) a.focus(); },420); }
+function closeMenu(){ mega.setAttribute('aria-hidden','true'); document.body.style.overflow=''; document.getElementById('menuToggle').focus(); }
+document.getElementById('menuToggle').addEventListener('click', (e)=> openMenuFromBtn(e.currentTarget));
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.getElementById('menuBackdrop').addEventListener('click', closeMenu);
+document.addEventListener('keydown', (e)=> { if(e.key==='Escape'){ if(mega.getAttribute('aria-hidden')==='false') closeMenu(); }} );
+
+
+const QA = [
+  {k:['next event','when is the next event'],'a':'Open the Events page — the nearest scheduled event and countdown are shown at the top.'},
+  {k:['how to register','how do i register','register for event'],'a':'Go to Register → choose event → pick ticket type & quantity → mock payment. Confirmation saved locally.'},
+  {k:['pcm official','what is pcm official'],'a':'PCM Official is President\'s College Minuwangoda\'s digital events hub: announcements, calendar, registrations & live updates.'},
+  {k:['sports meet','interhouse sports'],'a':'Interhouse Sports Meet details are on Events & Calendar (e.g. 29 Jan — Main Grounds).'},
+  {k:['science exhibition','science fair'],'a':'Science Exhibition: student projects, judging & awards. Details on Events page.'},
+  {k:['live update','live updates','live match'],'a':'Live page shows live match updates with photos. You can also get play-by-play textlines there.'},
+  {k:['announcements','announcement'],'a':'Announcements page lists official notices. Important ones are also shown on the homepage.'},
+  {k:['calendar','date','highlighted date'],'a':'Calendar highlights event days; click a date to view its event (e.g., 29 Jan — Interhouse Sports Meet).'},
+  {k:['tickets','ticket price','price'],'a':'Ticket types and prices are visible on the Register page for each event (std, VIP, student discounts).'},
+  {k:['payment','pay online','payment'],'a':'Site simulates payment for demo. For live payments, integrate Stripe/PayPal — the Register form saves registrations locally.'},
+  {k:['contact','who do i contact'],'a':'Use the Contact page to find event coordinators or admin contact details.'},
+  {k:['holidays','school holidays'],'a':'Holiday dates are published in Announcements when confirmed.'},
+  {k:['clubs','club events'],'a':'Club competitions and events are added to Events & Announcements when scheduled.'},
+  {k:['rules','event rules'],'a':'Each event card contains rules and uniform instructions in the details or announcement.'},
+  {k:['results','event results'],'a':'After events finish, results are posted in Announcements and may be added to the Gallery.'},
+  {k:['uniform','attire'],'a':'Uniform info (house T-shirts, sports kit) is included in event descriptions and announcements.'},
+  {k:['volunteer','how to volunteer'],'a':'Volunteer signup appears on relevant event pages. Contact event coordinator for details.'},
+  {k:['photos','gallery'],'a':'Event photos are published in Gallery after the event — Live page also shows match photos during play.'},
+  {k:['score','scoreboard'],'a':'Live scoreboard example: "PCM 249-6 (48.3) — need 4 runs from 9 balls."'}, 
+  {k:['help','support'],'a':'Ask me about events, registration, live updates, or say "contact" for staff info.'}
+];
+
+
+function findAnswer(text){
+  const q = text.toLowerCase();
+  for(const item of QA){
+    for(const k of item.k) if(q.includes(k)) return item.a;
+  }
+  return "Sorry, I didn't catch that. Try: 'When is the next event?', 'How do I register?', or 'What is PCM Official?'.";
+}
+
+
+const messages = document.getElementById('messages');
+function addBubble(txt, who='bot'){
+  const el = document.createElement('div');
+  el.className = 'bubble ' + (who === 'user' ? 'user' : 'bot');
+  el.innerHTML = `<div>${escapeHtml(txt)}</div><div class="timestamp" style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:6px">${new Date().toLocaleTimeString()}</div>`;
+  messages.appendChild(el);
+  messages.scrollTop = messages.scrollHeight;
+}
+function escapeHtml(s){ return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+document.getElementById('sendBtn').addEventListener('click', sendChat);
+document.getElementById('inputText').addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); sendChat(); } });
+
+function sendChat(){
+  const v = document.getElementById('inputText').value.trim();
+  if(!v) return;
+  addBubble(v,'user');
+  document.getElementById('inputText').value = '';
+  setTimeout(()=> addBubble(findAnswer(v),'bot'), 350);
+}
+function quickAsk(q){ document.getElementById('inputText').value=q; sendChat(); }
+
+addBubble('Hi — I am PCM Assist 👋 — ask about events, registrations, live updates, or say "help".','bot');
+
+</script>
+</body>
+</html>

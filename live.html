@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Live — PCM Official</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .wrap{max-width:1200px;margin:96px auto;padding:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+    .match{background:var(--glass);padding:14px;border-radius:12px;box-shadow:0 16px 60px rgba(0,0,0,0.6)}
+    .match img{width:100%;height:180px;object-fit:cover;border-radius:10px}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .score{font-weight:900;color:var(--accent)}
+    .log{margin-top:10px;background:rgba(0,0,0,0.06);padding:10px;border-radius:8px;height:140px;overflow:auto}
+    .btns{display:flex;gap:8px;margin-top:10px}
+    .btns button{padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+  </style>
+</head>
+<body data-page="live">
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html"><img src="scllogo.png" class="brand-logo"><div class="brand-text"><h1>PCM Official</h1><small>Live</small></div></a>
+      <nav class="top-nav"><a class="top-btn" href="index.html">Home</a><a class="top-btn" href="events.html">Events</a><a class="top-btn" href="register.html">Register</a><a class="top-btn" href="chatbot.html">Chat</a></nav>
+      <div class="header-controls"><button id="themeToggle" class="icon-btn">🌓</button><button id="menuToggle" class="menu-btn">☰</button></div>
+    </div>
+  </header>
+
+
+  <div id="megaMenu" class="mega-menu" aria-hidden="true" role="dialog"><div id="menuBackdrop" class="menu-backdrop" data-action="close" tabindex="-1"></div><div id="menuPanel" class="menu-panel" style="--cx:50%;--cy:50%"><button id="menuClose" class="menu-close">✕</button><div class="menu-inner container-grid"><div class="menu-left"><div class="menu-brand"><img src="scllogo.png" class="menu-logo"><div><h2>PCM Official</h2><p class="muted">Centralized events & announcements.</p></div></div><nav class="menu-links"><a href="index.html" class="menu-item" style="--i:0">Home</a><a href="events.html" class="menu-item" style="--i:1">Events</a><a href="announcements.html" class="menu-item" style="--i:2">Announcements</a><a href="calendar.html" class="menu-item" style="--i:3">Calendar</a><a href="register.html" class="menu-item" style="--i:4">Register</a></nav><div class="menu-cta-row"><a class="button primary menu-cta" href="register.html">Quick Register</a></div></div><aside class="menu-right"><div class="menu-visual" style="background-image:url('mbc.png')"><div class="menu-visual-inner"><h3>President's College Minuwangoda</h3><p class="muted">Live match updates & highlights.</p></div></div></aside></div><div class="menu-bottom container"><div class="menu-foot">© <span id="menuYear">2025</span> PCM Official</div></div></div></div>
+
+  <main class="wrap">
+    <h2 style="color:var(--accent)">Live Sports Updates</h2>
+    <p class="muted">Play-by-play style live text with photos. Example formats are shown below.</p>
+
+    <div class="grid" id="liveGrid">
+  
+      <article class="match" id="m1">
+        <img src="a3.jpg" alt="PCM vs MC">
+        <div class="meta"><div><strong>PCM vs MC</strong><div class="muted">Inter-school Cup</div></div><div class="live-flag">LIVE</div></div>
+        <div class="score" id="m1score">PCM 249-6 (48.3)</div>
+        <div class="muted">PCM need 4 runs to win from 9 balls.</div>
+        <div class="log" id="m1log"><div>48.3 — 2 runs; score 249/6</div><div>48.2 — dot ball</div></div>
+        <div class="btns"><button onclick="simUpdate('m1','+1 run','1 run')">Sim +1</button><button onclick="simUpdate('m1','WICKET','bowled')">Sim Wicket</button></div>
+      </article>
+
+      <article class="match" id="m2">
+        <img src="a2.jpg" alt="PCM vs BC">
+        <div class="meta"><div><strong>PCM vs BC</strong><div class="muted">Friendly</div></div><div class="live-flag">LIVE</div></div>
+        <div class="score" id="m2score">BC 8-4 (40)</div>
+        <div class="muted">40 minutes played — halftime approaching.</div>
+        <div class="log" id="m2log"><div>35' — Goal by BC</div></div>
+        <div class="btns"><button onclick="simUpdate('m2','GOAL','BC scored')">Sim Goal</button><button onclick="simUpdate('m2','HT','Half-time')">Sim HT</button></div>
+      </article>
+
+      <article class="match" id="m3">
+        <img src="a1.jpg" alt="PCM vs RC">
+        <div class="meta"><div><strong>PCM vs RC</strong><div class="muted">Test</div></div><div class="live-flag">LIVE</div></div>
+        <div class="score" id="m3score">PCM 120/3 (35.0)</div>
+        <div class="muted">Steady innings building.</div>
+        <div class="log" id="m3log"><div>34.6 — 4 runs</div></div>
+        <div class="btns"><button onclick="simUpdate('m3','4','Boundary')">Sim 4</button><button onclick="simUpdate('m3','0','Dot ball')">Sim Dot</button></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><div>© <span id="yearFooter">2025</span> PCM Official</div><div class="footer-credit">Designed by Pahan Bimsara</div></div></footer>
+
+<script>
+
+const THEME_KEY = 'pcm_theme_v_final';
+function applyTheme(t){ if(t==='light'){ document.body.classList.add('light'); document.body.classList.remove('dark'); } else { document.body.classList.remove('light'); document.body.classList.add('dark'); } localStorage.setItem(THEME_KEY,t); document.getElementById('themeToggle').setAttribute('aria-pressed', t==='light'); }
+function toggleTheme(){ applyTheme(document.body.classList.contains('light') ? 'dark' : 'light'); }
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+
+
+const mega = document.getElementById('megaMenu'), panel = document.getElementById('menuPanel');
+function openMenuFromButton(btn){ const r = btn.getBoundingClientRect(); const cx = ((r.left + r.width/2)/window.innerWidth)*100; const cy = ((r.top + r.height/2)/window.innerHeight)*100; panel.style.setProperty('--cx',cx+'%'); panel.style.setProperty('--cy',cy+'%'); mega.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+function closeMenu(){ mega.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+document.getElementById('menuToggle').addEventListener('click',(e)=>openMenuFromButton(e.currentTarget));
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.getElementById('menuBackdrop').addEventListener('click', closeMenu);
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ if(mega.getAttribute('aria-hidden')==='false') closeMenu(); } });
+
+
+function simUpdate(matchId, shortText, desc=''){
+  const log = document.getElementById(matchId + 'log'); const score = document.getElementById(matchId + 'score');
+  const t = new Date().toLocaleTimeString(); const el = document.createElement('div'); el.textContent = `${t} — ${shortText}${desc?(' — '+desc):''}`; log.insertBefore(el, log.firstChild);
+
+  if(shortText.toLowerCase().includes('4') || shortText.toLowerCase().includes('goal') || shortText.includes('+1')) score.textContent = score.textContent + ' ↑';
+  if(shortText.toLowerCase().includes('wicket')) score.textContent = score.textContent + ' ⚑';
+}
+</script>
+</body>
+</html>

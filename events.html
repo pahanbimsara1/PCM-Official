@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Events — PCM Official</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="scllogo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="events">
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html">
+        <img src="scllogo.png" class="brand-logo" alt="PCM logo">
+        <div class="brand-text"><h1>PCM Official</h1><small>Events</small></div>
+      </a>
+
+      <nav class="top-nav" aria-label="Top Navigation">
+        <a class="top-btn" href="index.html">Home</a>
+        <a class="top-btn" href="events.html">Events</a>
+        <a class="top-btn" href="register.html">Register</a>
+        <a class="top-btn" href="updates.html">Live</a>
+      </nav>
+
+      <div class="header-controls">
+        <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">🌓</button>
+        <button id="menuToggle" class="menu-btn" aria-controls="megaMenu" aria-expanded="false" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+
+  <div id="megaMenu" class="mega-menu" aria-hidden="true">
+    <div id="menuBackdrop" class="menu-backdrop" data-action="close" tabindex="-1"></div>
+    <div class="menu-panel" role="dialog" aria-modal="true" style="--cx:50%;--cy:50%;">
+      <button class="menu-close" aria-label="Close menu">✕</button>
+      <div class="menu-inner container-grid">
+        <div class="menu-left">
+          <div class="menu-brand">
+            <img src="scllogo.png" class="menu-logo" alt="">
+            <div><h2>PCM Official</h2><p class="muted">Central events hub — President's College Minuwangoda</p></div>
+          </div>
+          <nav class="menu-links" aria-label="Main menu">
+            <a href="index.html" class="menu-item">Home</a>
+            <a href="events.html" class="menu-item">Events</a>
+            <a href="announcements.html" class="menu-item">Announcements</a>
+            <a href="calendar.html" class="menu-item">Calendar</a>
+            <a href="register.html" class="menu-item">Register</a>
+            <a href="updates.html" class="menu-item">Live</a>
+            <a href="gallery.html" class="menu-item">Gallery</a>
+            <a href="contact.html" class="menu-item">Contact</a>
+          </nav>
+        </div>
+        <aside class="menu-right" aria-hidden="true">
+          <div class="menu-visual" style="background-image:url('mbc.png')">
+            <div class="menu-visual-inner">
+              <h3>President's College Minuwangoda</h3>
+              <p class="muted">Stay informed of events, registrations & live highlights.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <div class="menu-bottom container"><div class="menu-foot">© <span id="menuYear">2025</span> PCM Official · Designed by Pahan Bimsara</div></div>
+    </div>
+  </div>
+
+
+  <main class="container" style="padding:28px 20px;">
+    <section class="hero card">
+      <h1>Upcoming & Featured Events</h1>
+      <p class="muted">Browse events, view details and register. Click Details for full info.</p>
+    </section>
+
+    <section style="margin-top:18px;">
+      <div id="eventsGrid" class="events-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer container" style="margin-top:28px"><div class="footer-grid"><div>© <span id="yearFooter">2025</span> PCM Official</div><div class="footer-credit">Designed by Pahan Bimsara</div></div></footer>
+
+<script>
+
+const EVENTS = [
+  {id:'e1', title:'Annual Sports Meet', date:'2026-01-29', time:'08:30 AM', loc:'Main Grounds', desc:'Interhouse competitions — track & field, relays, jumps & throws. House T-shirts required.', img:'e1.jpg'},
+  {id:'e2', title:'Inter-school Debate Finals', date:'2026-02-15', time:'09:00 AM', loc:'Auditorium', desc:'District debate finals with prepared & impromptu rounds.', img:'e2.jpg'},
+  {id:'e3', title:'Science Exhibition', date:'2026-03-12', time:'10:00 AM', loc:'Gymnasium', desc:'Student STEM projects with judges and awards.', img:'e3.jpg'},
+  {id:'e4', title:'Art & Culture Night', date:'2026-03-05', time:'06:00 PM', loc:'Hall B', desc:'Music, dance and cultural performances from student groups.', img:'e4.jpg'},
+  {id:'e5', title:'House Music Competition', date:'2025-11-30', time:'06:00 PM', loc:'Main Hall', desc:'Vocal & instrumental competitions between houses.', img:'e5.jpg'},
+  {id:'e6', title:'Annual Prize Giving', date:'2026-04-18', time:'09:00 AM', loc:'Main Grounds', desc:'Awards for academic, sport & extracurricular achievements.', img:'e6.jpg'}
+];
+
+function renderEvents(){
+  const grid = document.getElementById('eventsGrid');
+  grid.innerHTML = EVENTS.map(ev => `
+    <article class="card event-card" style="padding:12px">
+      <img src="${ev.img}" alt="${ev.title}">
+      <h3 style="color:var(--accent);margin:10px 0 6px 0">${ev.title}</h3>
+      <div class="muted">${ev.date} • ${ev.time} • ${ev.loc}</div>
+      <p style="margin-top:8px">${ev.desc.substring(0,110)}...</p>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="button outline" onclick="showDetails('${ev.id}')">Details</button>
+        <a class="button primary" href="register.html" onclick="sessionStorage.setItem('prefill','${ev.id}')">Register</a>
+      </div>
+    </article>
+  `).join('');
+}
+
+function showDetails(id){
+  const ev = EVENTS.find(e=>e.id===id);
+  if(!ev) return;
+  const info = `${ev.title}\n\n${ev.date} • ${ev.time} • ${ev.loc}\n\n${ev.desc}`;
+  alert(info + '\n\n(Open Register to sign up.)');
+}
+
+
+(function(){
+  const THEME_KEY = 'pcm_theme_v3';
+  function applyTheme(theme){
+    if(theme === 'light') document.body.classList.add('light'); else document.body.classList.remove('light');
+    localStorage.setItem(THEME_KEY, theme);
+  }
+  const saved = localStorage.getItem(THEME_KEY);
+  const pref = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  applyTheme(saved || pref);
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light');
+    applyTheme(isLight ? 'light' : 'dark');
+  });
+
+  const mega = document.getElementById('megaMenu'), panel = mega.querySelector('.menu-panel');
+  const menuBtn = document.getElementById('menuToggle');
+  function openMenuFrom(btn){
+    const r = btn.getBoundingClientRect();
+    const cx = ((r.left + r.width/2) / window.innerWidth) * 100;
+    const cy = ((r.top + r.height/2) / window.innerHeight) * 100;
+    panel.style.setProperty('--cx', cx + '%');
+    panel.style.setProperty('--cy', cy + '%');
+    mega.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu(){
+    mega.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+  menuBtn.addEventListener('click', (e)=> openMenuFrom(e.currentTarget));
+  mega.querySelectorAll('.menu-close, .menu-backdrop').forEach(el => el.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeMenu(); });
+
+})();
+
+
+document.addEventListener('DOMContentLoaded', renderEvents);
+</script>
+</body>
+</html>

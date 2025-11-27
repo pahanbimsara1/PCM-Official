@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PCM Official — President's College Minuwangoda</title>
+  <meta name="description" content="PCM Official - centralized events & announcements for President's College Minuwangoda" />
+
+ 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+  <link rel="icon" href="scllogo.png">
+</head>
+<body data-page="home" class="dark">
+
+
+  <div id="site-loader" class="site-loader" role="status" aria-live="polite" aria-label="Loading PCM Official">
+    <div class="loader-overlay"></div>
+
+    <div class="loader-visual">
+      <div class="loader-particles">
+        <span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span>
+      </div>
+
+      <div class="loader-card">
+        <img src="scllogo.png" alt="PCM logo" class="loader-logo" />
+        <h2 class="loader-title">PCM Official</h2>
+
+        <div class="loader-bar-wrap" aria-hidden="true">
+          <div id="loader-bar" class="loader-bar"></div>
+        </div>
+
+        <div class="loader-meta">
+          <div id="loader-percent">1%</div>
+          <div id="loader-welcome" class="loader-welcome">Preparing Presidentzz Events…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header" role="banner">
+    <div class="container header-row">
+      <a class="brand" href="index.html" aria-label="PCM Official home">
+        <img src="scllogo.png" alt="PCM Logo" class="brand-logo">
+        <div class="brand-text">
+          <h1>PCM Official</h1>
+          <small>President's College Minuwangoda — Presidentzz Events</small>
+        </div>
+      </a>
+
+      <nav class="top-nav" aria-label="Top navigation">
+        <a class="top-btn" href="index.html">Home</a>
+        <a class="top-btn" href="events.html">Events</a>
+        <a class="top-btn" href="register.html">Register</a>
+        <a class="top-btn" href="contact.html">Contact</a>
+      </nav>
+
+      <div class="header-controls">
+        <button id="themeToggle" class="icon-btn" aria-pressed="false" title="Toggle theme" aria-label="Toggle theme">🌓</button>
+
+        <button id="menuToggle" class="menu-btn" aria-controls="megaMenu" aria-expanded="false" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="megaMenu" class="mega-menu" aria-hidden="true" role="dialog" aria-label="Main menu">
+    <div id="menuBackdrop" class="menu-backdrop" tabindex="-1" data-action="close"></div>
+
+
+    <div id="menuPanel" class="menu-panel" style="--cx:50% ; --cy:50%;">
+      <button id="menuClose" class="menu-close" aria-label="Close menu">✕</button>
+
+      <div class="menu-inner container-grid">
+        <div class="menu-left">
+          <div class="menu-brand">
+            <img src="scllogo.png" alt="PCM logo" class="menu-logo">
+            <div>
+              <h2>PCM Official</h2>
+              <p class="muted">Centralized events & announcements for President's College Minuwangoda.</p>
+            </div>
+          </div>
+
+          <nav class="menu-links" aria-label="Primary menu">
+            <a href="index.html" class="menu-item" style="--i:0">Home</a>
+            <a href="events.html" class="menu-item" style="--i:1">Events</a>
+            <a href="announcements.html" class="menu-item" style="--i:2">Announcements</a>
+            <a href="calendar.html" class="menu-item" style="--i:3">Calendar</a>
+            <a href="register.html" class="menu-item" style="--i:4">Register</a>
+            <a href="live.html" class="menu-item" style="--i:5">Live Updates</a>
+            <a href="gallery.html" class="menu-item" style="--i:6">Gallery</a>
+            <a href="about.html" class="menu-item" style="--i:7">About</a>
+            <a href="contact.html" class="menu-item" style="--i:8">Contact</a>
+          </nav>
+
+          <div class="menu-cta-row">
+            <a href="register.html" class="button primary menu-cta" style="--i:9">Quick Register</a>
+            <a href="events.html" class="button outline menu-cta" style="--i:10">Browse Events</a>
+          </div>
+        </div>
+
+        <aside class="menu-right" aria-hidden="true">
+          <div class="menu-visual" style="background-image: url('mbc.png')">
+            <div class="menu-visual-inner">
+              <h3>President's College Minuwangoda</h3>
+              <p class="muted">Stay updated with Presidentzz Events — announcements, registrations & live highlights in one place.</p>
+
+              <div class="menu-socials">
+                <a href="#" class="social">FB</a>
+                <a href="#" class="social">IG</a>
+                <a href="#" class="social">YT</a>
+                <a href="#" class="social">TT</a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="menu-bottom container">
+        <div class="menu-foot">© <span id="menu-year"></span> PCM Official · Designed by <strong>Pahan Bimsara</strong></div>
+      </div>
+    </div>
+  </div>
+
+
+  <main id="site-main" class="site-main" aria-hidden="true">
+
+
+    <div class="headline-marquee" title="Latest headlines - hover to pause">
+      <div id="marqueeInner" class="marquee-inner" tabindex="0" aria-live="polite"></div>
+    </div>
+
+
+    <section class="hero" role="region" aria-label="Hero" style="background-image:url('mbc.png')">
+      <div class="container hero-inner">
+        <div class="hero-left">
+          <h2 class="headline">Presidentzz Events — PCM Official</h2>
+          <p class="hero-subtitle">Your single hub for all school events, announcements & live updates.</p>
+          <p class="hero-subtitle">‌‌‌‌‌  ‌  ‌</p>
+          <div class="hero-ctas">
+            <a class="button primary" href="events.html">Explore Events</a>
+            <a class="button outline" href="register.html">Register Now</a>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat card">
+              <div class="stat-value" id="statEvents">0</div>
+              <div class="stat-label">Upcoming Events</div>
+            </div>
+            <div class="stat card">
+              <div class="stat-value" id="statRegs">0</div>
+              <div class="stat-label">Registrations</div>
+            </div>
+            <div class="stat card">
+              <div class="stat-value" id="statLive">0</div>
+              <div class="stat-label">Live Posts</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-right">
+          <div class="card next-card">
+            <h4>Next Event</h4>
+            <div id="nextEventTitle">—</div>
+            <div id="nextEventCountdown" class="countdown">—</div>
+            <div class="detail-actions">
+              <button class="button outline" id="nextEventDetails">Details</button>
+              <a class="button primary" href="register.html">Register</a>
+            </div>
+          </div>
+
+          <div class="card announcements">
+            <h4>Latest Announcements</h4>
+            <ul id="homeAnnouncements" class="compact-list"><li>Loading…</li></ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+
+    <section class="upcoming container">
+      <h3 class="section-title">Upcoming Events</h3>
+      <div id="upcomingList" class="cards-grid">Loading…</div>
+    </section>
+
+
+    <section class="featured-events container">
+      <h3 class="section-title">Featured Events</h3>
+      <div id="featuredEvents" class="cards-grid">Loading…</div>
+      <div class="more-actions">
+        <a id="btnAllEvents" class="button outline" href="events.html">View All Events</a>
+        <a id="btnCalendar" class="button outline" href="calendar.html">Open Calendar</a>
+        <button id="btnDownload" class="button primary">Export Registrations (CSV)</button>
+      </div>
+    </section>
+
+
+    <section class="faq container">
+      <h3 class="section-title">FAQ</h3>
+      <div class="faq-list">
+        <div class="faq card">
+          <button class="faq-q">How do I register?</button>
+          <div class="faq-a">Use the Register page or the Register CTA on event cards. Fill the form and you'll get confirmation.</div>
+        </div>
+        <div class="faq card">
+          <button class="faq-q">Who can view announcements?</button>
+          <div class="faq-a">Students, parents and staff. Admins can post official announcements.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <a id="robot" class="robot" href="chatbot.html" aria-label="Open chat">
+    <svg class="robot-svg" viewBox="0 0 160 160" width="120" height="120" role="img" aria-hidden="true">
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#F5CE06"/><stop offset="1" stop-color="#8F0002"/></linearGradient>
+      </defs>
+      <rect x="20" y="28" rx="18" ry="18" width="120" height="88" fill="#0d0d0d" stroke="url(#g1)" stroke-width="2"></rect>
+      <rect x="36" y="12" rx="12" ry="12" width="88" height="46" fill="url(#g1)"></rect>
+    </svg>
+    <div class="robot-bubble">How can I help you?</div>
+  </a>
+
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-left">
+        <div>© <span id="year-footer">2025</span> PCM Official</div>
+        <div class="footer-credit">Designed and developed by <strong>Pahan Bimsara</strong> (President's College Minuwangoda)</div>
+      </div>
+
+      <div class="footer-right socials-large">
+        <a href="https://www.facebook.com/PCEMU/" class="soc">Facebook</a>
+        <a href="https://www.instagram.com/mpc_e_media_unit/" class="soc">Instagram</a>
+        <a href="https://www.youtube.com/channel/UCLcdNEvfk3rmB5o1KIWJ9UA/videos" class="soc">YouTube</a>
+        <a href="https://www.tiktok.com/@mpc_emedia_unit/" class="soc">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
